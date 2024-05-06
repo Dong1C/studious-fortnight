@@ -29,32 +29,37 @@ with gr.Blocks() as demo:
             plotted_img = gr.Image(label="Plotted Result Image",
                                 sources=None,
                                 show_download_button=True)
+        # update the list of files from the model_name
+        @model_name.change(inputs=model_name, outputs=[cfg_file, ckpt_file])
+        def update_file_list(model_name):
+            cfg_list = [cfg for cfg in 
+                        list_from_folder(folder_path=os.path.join(cfg_path, model_name), mode='f')
+                        if cfg.endswith('.py')]
+            ckpt_list = [ckpt for ckpt in
+                        list_from_folder(os.path.join(ckpt_path, model_name), mode='f')
+                        if ckpt.endswith('.pth')]
+            return (gr.Dropdown(choices=cfg_list, value=cfg_list[0], interactive=True), 
+                    gr.Dropdown(choices=ckpt_list, value=ckpt_list[0], interactive=True))
+        
+        # do inference when clicking the button
+        @btn.click(inputs=[model_name, cfg_file, ckpt_file, source_img], outputs=plotted_img)
+        def inference(model_name, cfg_file, ckpt_file, source_img):
+            cfg_file = os.path.join(cfg_path, model_name, cfg_file)
+            ckpt_file = os.path.join(ckpt_path, model_name, ckpt_file)
+            print(cfg_file)
+            print(ckpt_file)
+            detector = get_detector(cfg_file, ckpt_file)
+            result_img = inference_plot(detector, source_img)
+            return result_img
             
     with gr.Tab("Train") as tab2:
-        with gr.Row():
-            gr.Textbox()
+        with gr.Row() as train_config:
+            model_name2 = gr.Dropdown(cfg_set & ckpt_set, label="Model Name", scale=1)
+            cfg_file = gr.Dropdown([], label="Config Full Name", interactive=False, scale=2)
+            btn = gr.Button(value="Start Inference",scale=1)
+            
+        
     
-    # update the list of files from the model_name
-    @model_name.change(inputs=model_name, outputs=[cfg_file, ckpt_file])
-    def update_file_list(model_name):
-        cfg_list = [cfg for cfg in 
-                    list_from_folder(folder_path=os.path.join(cfg_path, model_name), mode='f')
-                    if cfg.endswith('.py')]
-        ckpt_list = [ckpt for ckpt in
-                     list_from_folder(os.path.join(ckpt_path, model_name), mode='f')
-                     if ckpt.endswith('.pth')]
-        return (gr.Dropdown(choices=cfg_list, value=cfg_list[0], interactive=True), 
-                gr.Dropdown(choices=ckpt_list, value=ckpt_list[0], interactive=True))
-    
-    # do inference when clicking the button
-    @btn.click(inputs=[model_name, cfg_file, ckpt_file, source_img], outputs=plotted_img)
-    def inference(model_name, cfg_file, ckpt_file, source_img):
-        cfg_file = os.path.join(cfg_path, model_name, cfg_file)
-        ckpt_file = os.path.join(ckpt_path, model_name, ckpt_file)
-        print(cfg_file)
-        print(ckpt_file)
-        detector = get_detector(cfg_file, ckpt_file)
-        result_img = inference_plot(detector, source_img)
-        return result_img
+
 
 demo.launch(share=False)
