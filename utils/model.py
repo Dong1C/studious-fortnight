@@ -47,12 +47,6 @@ def inference(model, img, score_thr=0.3, palette='dota', text_color=(200,200,200
     return mmcv.bgr2rgb(plotted_img)
 
 
-
-
-
-
-
-
 if __name__ == "__main__":
     checkpoint = './checkpoints/oriented_rcnn_r50_fpn_1x_dota_le90-6d2b2ce0.pth'
     config = './configs/oriented_rcnn/oriented_rcnn_r50_fpn_1x_dota_le90.py'

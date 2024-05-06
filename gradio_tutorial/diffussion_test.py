@@ -1,3 +1,4 @@
+# gen some diffusion matrix and add them together
 import gradio as gr
 import numpy as np
 import time
