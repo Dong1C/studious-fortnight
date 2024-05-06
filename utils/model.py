@@ -31,7 +31,7 @@ def get_detector(config : str, checkpoint : str, device: str = 'cpu', *args, **k
     return model
 
 
-def inference(model, img, score_thr=0.3, palette='dota', text_color=(200,200,200),):
+def inference_plot(model, img, score_thr=0.3, palette='dota', text_color=(200,200,200),):
     if hasattr(model, 'module'):
         model = model.module
     plotted_img = model.show_result(img, 
@@ -44,7 +44,7 @@ def inference(model, img, score_thr=0.3, palette='dota', text_color=(200,200,200
                                     font_size=13,
                                     show=False)
     
-    return mmcv.bgr2rgb(plotted_img)
+    return plotted_img
 
 
 if __name__ == "__main__":
@@ -54,5 +54,5 @@ if __name__ == "__main__":
     # test 1 - get detector
     model = get_detector(config, checkpoint)
     # test 2 - inference 
-    img = inference(model, demo_img)
+    img = inference_plot(model, demo_img)
     print(img)
