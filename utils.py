@@ -1,18 +1,10 @@
-"""
-1. build the detector and inference : done
-2. scan and get the configs : 
-3. parse the configs into several params : 
-4. integrate the config files
-"""
 import torch
 import numpy as np
 
 import mmcv
 from mmcv.runner import load_checkpoint
-from mmdet.apis import inference_detector, show_result_pyplot
+from mmdet.apis import inference_detector
 from mmrotate.models import build_detector
-from mmrotate.core import imshow_det_rbboxes 
-
 
 import os.path as osp
 
@@ -40,14 +32,10 @@ def get_detector(config : str, checkpoint : str, device: str = 'cpu', *args, **k
 
 
 def inference(model, img, score_thr=0.3, palette='dota', text_color=(200,200,200),):
-    
-    # inference 
-    result = inference_detector(model, img)
-
     if hasattr(model, 'module'):
         model = model.module
     plotted_img = model.show_result(img, 
-                                    result, 
+                                    inference_detector(model, img), 
                                     score_thr=score_thr, 
                                     bbox_color=palette,
                                     text_color=(200,200,200),
