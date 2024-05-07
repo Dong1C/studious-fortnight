@@ -91,8 +91,8 @@ with gr.Blocks() as demo:
             btn_parse = gr.Button(value="Parse Config File", scale=1)
             btn_gen = gr.Button(value="Genetate Config File", scale=1)
         
-        with gr.Row():
-            confregis.render()
+        # with gr.Row():
+        #     confregis.render()
 
         @btn_parse.click()
         def gen_blocks():
