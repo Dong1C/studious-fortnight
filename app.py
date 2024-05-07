@@ -8,26 +8,26 @@ ckpt_path= './checkpoints'
 cfg_set = set(list_from_folder(folder_path=cfg_path, mode='d'))
 ckpt_set = set(list_from_folder(folder_path=ckpt_path, mode='d'))
 
-class ConfRegis:
-    conf_list = [gr.Textbox('') for _ in range(4)] 
-    def __init__(self, *args):
-        self.conf_list.extend(args)
+# class ConfRegis:
+#     conf_list = [gr.Textbox('') for _ in range(4)] 
+#     def __init__(self, *args):
+#         self.conf_list.extend(args)
     
-    def add(self, conf_block):
-        self.conf_list.append(conf_block)
+#     def add(self, conf_block):
+#         self.conf_list.append(conf_block)
 
-    def clear(self):
-        self.conf_list.clear()
+#     def clear(self):
+#         self.conf_list.clear()
 
-    def render(self):
-        print(self.conf_list)
-        [i.render() for i in self.conf_list]
-        print("render done")
+#     def render(self):
+#         print(self.conf_list)
+#         [i.render() for i in self.conf_list]
+#         print("render done")
 
-    def gen(self):
-        pass
+#     def gen(self):
+#         pass
 
-confregis = ConfRegis()
+# confregis = ConfRegis()
 
 
 with gr.Blocks() as demo:
@@ -94,12 +94,12 @@ with gr.Blocks() as demo:
         # with gr.Row():
         #     confregis.render()
 
-        @btn_parse.click()
-        def gen_blocks():
-            d = {"Name": "John", "Age": "30", "Email": "john@example.com"}
-            for key, value in d.items():
-                confregis.add(gr.Textbox(label=key, value=value))
-            confregis.render()
+        # @btn_parse.click()
+        # def gen_blocks():
+        #     d = {"Name": "John", "Age": "30", "Email": "john@example.com"}
+        #     for key, value in d.items():
+        #         confregis.add(gr.Textbox(label=key, value=value))
+        #     confregis.render()
         
             
         
