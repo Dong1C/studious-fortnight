@@ -1,6 +1,7 @@
 import os
 
-def list_from_folder(folder_path='../configs', mode='d', full_path=False):
+
+def list_from_folder(folder_path="../configs", mode="d", full_path=False):
     """
     Get a list of directories or files in a folder.
 
@@ -18,17 +19,17 @@ def list_from_folder(folder_path='../configs', mode='d', full_path=False):
     items = []
     for item in os.listdir(folder_path):
         item_path = os.path.join(folder_path, item)
-        if mode == 'd' and os.path.isdir(item_path):
+        if mode == "d" and os.path.isdir(item_path):
             if full_path:
                 items.append(item_path)
             else:
                 items.append(item)
-        elif mode == 'f' and os.path.isfile(item_path):
+        elif mode == "f" and os.path.isfile(item_path):
             if full_path:
                 items.append(item_path)
             else:
                 items.append(item)
-        elif mode == 'a':
+        elif mode == "a":
             if full_path:
                 items.append(item_path)
             else:

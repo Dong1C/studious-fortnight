@@ -165,3 +165,6 @@ checkpoints
 
 # gradio
 gradio
+
+# .vscode
+.vscode
