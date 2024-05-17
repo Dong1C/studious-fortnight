@@ -8,10 +8,8 @@ from mmrotate.models import build_detector
 
 import os.path as osp
 
-device = "cuda:0" if torch.cuda.is_available() else "cpu"
 
-
-def get_detector(config: str, checkpoint: str, device: str = "cpu", *args, **kwargs):
+def get_detector(config: str, checkpoint: str, device: str = "cuda:0", *args, **kwargs):
     # all assertion
     assert device == "cpu" or device.split(":")[0] == "cuda"
     assert osp.exists(config)
@@ -35,7 +33,7 @@ def get_detector(config: str, checkpoint: str, device: str = "cpu", *args, **kwa
 def inference_plot(
     model,
     img,
-    score_thr=0.3,
+    score_thr=0.25,
     palette="dota",
     text_color=(200, 200, 200),
 ):

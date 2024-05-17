@@ -8,28 +8,6 @@ ckpt_path= './checkpoints'
 cfg_set = set(list_from_folder(folder_path=cfg_path, mode='d'))
 ckpt_set = set(list_from_folder(folder_path=ckpt_path, mode='d'))
 
-# class ConfRegis:
-#     conf_list = [gr.Textbox('') for _ in range(4)] 
-#     def __init__(self, *args):
-#         self.conf_list.extend(args)
-    
-#     def add(self, conf_block):
-#         self.conf_list.append(conf_block)
-
-#     def clear(self):
-#         self.conf_list.clear()
-
-#     def render(self):
-#         print(self.conf_list)
-#         [i.render() for i in self.conf_list]
-#         print("render done")
-
-#     def gen(self):
-#         pass
-
-# confregis = ConfRegis()
-
-
 with gr.Blocks() as demo:
 
     """
@@ -40,17 +18,22 @@ with gr.Blocks() as demo:
     """
     with gr.Tab("Detection") as tab1:
         with gr.Row():
-            model_name = gr.Dropdown(cfg_set & ckpt_set, label="Model Name", scale=1)
-            cfg_file = gr.Dropdown([], label="Config Full Name", interactive=False, scale=2)
-            ckpt_file = gr.Dropdown([], label="Checkpoint Full Name", interactive=False, scale=2)
-            btn = gr.Button(value="Start Inference",scale=1)
+            model_name = gr.Dropdown(cfg_set & ckpt_set, label="Model Name", scale=2)
+            cfg_file = gr.Dropdown([], label="Config Full Name", interactive=False, scale=4)
+            ckpt_file = gr.Dropdown([], label="Checkpoint Full Name", interactive=False, scale=4)
+            btn = gr.Button(value="Start Inference",scale=2)
+
+        with gr.Row():
+            score_thr = gr.Slider(label="Score Threshold", interactive=True, minimum=0, maximum=1.0, step=0.05, scale=2)
+            use_gpu = gr.Checkbox(label="Use GPU", interactive=True, scale=1)
+
         with gr.Row():
             source_img = gr.Image(sources=['upload'],
                                 show_download_button=False)
-        with gr.Row():
             plotted_img = gr.Image(label="Plotted Result Image",
                                 sources=None,
                                 show_download_button=True)
+            
             
         # update the list of files from the model_name
         @model_name.change(inputs=model_name, outputs=[cfg_file, ckpt_file])
@@ -65,14 +48,16 @@ with gr.Blocks() as demo:
                     gr.Dropdown(choices=ckpt_list, value=ckpt_list[0], interactive=True))
         
         # do inference when clicking the button
-        @btn.click(inputs=[model_name, cfg_file, ckpt_file, source_img], outputs=plotted_img)
-        def inference(model_name, cfg_file, ckpt_file, source_img):
+        @btn.click(inputs=[model_name, cfg_file, ckpt_file, source_img, score_thr, use_gpu], outputs=plotted_img)
+        def inference(model_name, cfg_file, ckpt_file, source_img, score_thr, use_gpu):
+            print("use_gpu" + "True" if use_gpu else "False")
             cfg_file = os.path.join(cfg_path, model_name, cfg_file)
             ckpt_file = os.path.join(ckpt_path, model_name, ckpt_file)
             print(cfg_file)
             print(ckpt_file)
-            detector = get_detector(cfg_file, ckpt_file)
-            result_img = inference_plot(detector, source_img)
+            device = "cuda:0" if use_gpu else "cpu"
+            detector = get_detector(cfg_file, ckpt_file, device)
+            result_img = inference_plot(detector, source_img, score_thr)
             return result_img
     
 
